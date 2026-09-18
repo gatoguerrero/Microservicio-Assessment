@@ -51,9 +51,9 @@ stages:
         jdkSourceOption: 'PreInstalled'
 
     - script: |
-        mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \ #comando que Sonar dice que se utilice
+        mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
           -Dsonar.projectKey=gatoguerrero_Microservicio-Assessment
       workingDirectory: 'Microservicio'
       displayName: 'Análisis de Sonar Cloud'
       env:
-        SONAR_TOKEN: $(SONAR_TOKEN) #Se la pasa como variable de entorno
+        SONAR_TOKEN: $(SONAR_TOKEN)
