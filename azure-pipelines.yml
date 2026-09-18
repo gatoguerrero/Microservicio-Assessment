@@ -26,9 +26,9 @@ stages:
         jdkSourceOption: 'PreInstalled'
 
     - script: |
-        mvn clean test
+        mvn clean verify
       workingDirectory: 'Microservicio'
-      displayName: 'TestAautomatizados'
+      displayName: 'Test y Cobertura'
 
 
 - stage: AnalisisEstatico
