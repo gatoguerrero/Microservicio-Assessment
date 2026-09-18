@@ -1,24 +1,59 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
+
+variables:
+- group: vg-aks-liq
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
+stages:
 
-- task: JavaToolInstaller@0
-  displayName: 'Use Java 17'
-  inputs:
-    versionSpec: '17'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'PreInstalled'
+- stage: Tests
+  displayName: 'Test Automatizado'
 
-- script: |
-    mvn clean test
-  workingDirectory: 'Microservicio'
-  displayName: 'Run automated tests'
+  jobs:
+  - job: RunTests
+    displayName: 'Tests Maven'
+
+    steps:
+
+    - task: JavaToolInstaller@0
+      displayName: 'Instalar Java'
+      inputs:
+        versionSpec: '17'
+        jdkArchitectureOption: 'x64'
+        jdkSourceOption: 'PreInstalled'
+
+    - script: |
+        mvn clean test
+      workingDirectory: 'Microservicio'
+      displayName: 'Test automatizados'
+
+
+- stage: Análisis estático
+  displayName: 'Análisis estático de Código con Sonar'
+
+  dependsOn: Tests
+  condition: succeeded()
+
+  jobs:
+  - job: SonarCloud
+    displayName: 'Análisis con Sonar Cloud'
+
+    steps:
+
+    - task: JavaToolInstaller@0
+      displayName: 'Use Java 17'
+      inputs:
+        versionSpec: '17'
+        jdkArchitectureOption: 'x64'
+        jdkSourceOption: 'PreInstalled'
+
+    - script: |
+        mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \ #comando que Sonar dice que se utilice
+          -Dsonar.projectKey=gatoguerrero_Microservicio-Assessment
+      workingDirectory: 'Microservicio'
+      displayName: 'Análisis de Sonar Cloud'
+      env:
+        SONAR_TOKEN: $(SONAR_TOKEN) #Se la pasa como variable de entorno
