@@ -52,7 +52,8 @@ stages:
 
     - script: |
         mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=gatoguerrero_Microservicio-Assessment
+          -Dsonar.projectKey=gatoguerrero_Microservicio-Assessment \
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
       workingDirectory: 'Microservicio'
       displayName: 'Análisis de Sonar Cloud'
       env:
