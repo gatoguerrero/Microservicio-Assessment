@@ -4,8 +4,6 @@ trigger:
       - main
       - master
       - develop
-      - release/*
-      - feature/*
 
 variables:
 - group: vg-aks-liq
