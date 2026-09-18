@@ -94,6 +94,7 @@ stages:
         targetPath: 'Microservicio/target/devops-svc-1.0.0.jar'
         artifact: 'application-jar'
 
+
 - stage: Docker
   displayName: 'Docker Build y Push a ACR'
 
@@ -117,14 +118,19 @@ stages:
         cp $(Pipeline.Workspace)/application-jar/devops-svc-1.0.0.jar Microservicio/target/devops-svc-1.0.0.jar
       displayName: 'Preparar JAR para Docker'
 
-    - task: Docker@2
+    - task: AzureCLI@2
       displayName: 'Build y Push a ACR'
       inputs:
-        command: 'buildAndPush'
-        containerRegistry: '$(serviceConnection)'
-        repository: 'devops-svc'
-        dockerfile: 'Microservicio/Dockerfile'
-        buildContext: 'Microservicio'
-        tags: |
-          $(Build.BuildId)
-          latest
+        azureSubscription: '$(serviceConnection)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az acr login --name acrassessmentdevops
+
+          docker build \
+            -t acrassessmentdevops.azurecr.io/devops-svc:$(Build.BuildId) \
+            -t acrassessmentdevops.azurecr.io/devops-svc:latest \
+            Microservicio
+
+          docker push acrassessmentdevops.azurecr.io/devops-svc:$(Build.BuildId)
+          docker push acrassessmentdevops.azurecr.io/devops-svc:latest
