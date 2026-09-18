@@ -31,15 +31,15 @@ stages:
       displayName: 'Test automatizados'
 
 
-- stage: Análisis estático
-  displayName: 'Análisis estático de Código con Sonar'
+- stage: Analisis estatico
+  displayName: 'Analisis estatico de Codigo con Sonar'
 
   dependsOn: Tests
   condition: succeeded()
 
   jobs:
   - job: SonarCloud
-    displayName: 'Análisis con Sonar Cloud'
+    displayName: 'Analisis con Sonar Cloud'
 
     steps:
 
